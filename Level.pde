@@ -1,9 +1,26 @@
-class Level extends IGameModule {
+class Level extends IGameModule { //<>//
   ArrayList<ArrayList<Cell>> _field;
+
+  Car _player;
+  Car _enemy;
 
   public Level() {
     CreateField();
     FillField();
+
+    int startX;
+    int startY;
+    do {
+      startX = floor(random(40));
+      startY = floor(random(22));
+    } while (!_field.get(startX).get(startY).Visited);
+    int startDirection;
+    do {
+      startDirection = floor(random(4));
+    } while (!_field.get(startX).get(startY).GetOpenByDirection(startDirection));
+
+    _player = new Car(startX, startY, startDirection, 2, color(0, 0, 255));
+    _enemy = new Car(startX, startY, startDirection, 1, color(255, 0, 0));
   }
 
   public void CreateField() {
@@ -40,7 +57,7 @@ class Level extends IGameModule {
 
   public void FillField() {
     for (int i = 0; i < 40; i++) {
-      int x = floor(random(40)); //<>//
+      int x = floor(random(40));
       int y = floor(random(22));
       if (_field.get(x).get(y).Visited) {
         i--;
@@ -92,6 +109,10 @@ class Level extends IGameModule {
   }
 
   public IGameModule Update() {
+    _player.Update(_field);
+
+    if (_enemy.Update(_field))
+      _enemy.SteeringDirection = floor(random(3));
     return null;
   }
 
@@ -104,8 +125,28 @@ class Level extends IGameModule {
         column.get(y).Draw(x, y);
       }
     }
+
+    _enemy.Draw();
+    _player.Draw();
   }
 
   public void MousePressed() {
+    int steering = 0;
+    if (MOUSEX < 0)
+      steering = 1;
+    else
+      steering = 2;
+    SetPlayerSteering(steering);
+  }
+
+  public void KeyPressed() {
+    if (key == 'a' || keyCode == LEFT)
+      SetPlayerSteering(1);
+    if (key == 'd' || keyCode == RIGHT)
+      SetPlayerSteering(2);
+  }
+
+  public void SetPlayerSteering(int steering) {
+    _player.SteeringDirection = steering;
   }
 }

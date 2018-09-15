@@ -8,4 +8,7 @@ class IGameModule {
 
   public void MousePressed() {
   }
+
+  public void KeyPressed() {
+  }
 }

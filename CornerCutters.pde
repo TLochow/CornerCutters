@@ -4,7 +4,7 @@ float MOUSEY;
 IGameModule _currentModule;
 
 void setup() {
-  size(800, 450);
+  size(1600, 900);
   //fullScreen();
 
   float originWidth = 800.0;
@@ -20,9 +20,6 @@ void setup() {
 void draw() {
   background(0);
   translate(width / 2, height / 2);
-  // Translate Mouse:
-  MOUSEX = mouseX - (width / 2);
-  MOUSEY = mouseY - (height / 2);
 
   IGameModule nextModule = _currentModule.Update();
   _currentModule.Draw();
@@ -37,4 +34,8 @@ void mousePressed() {
   MOUSEY = mouseY - (height / 2);
   
   _currentModule.MousePressed();
+}
+
+void keyPressed() {
+  _currentModule.KeyPressed();
 }
