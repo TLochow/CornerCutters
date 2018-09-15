@@ -25,6 +25,6 @@ class Fader {
   public void Draw() {
     fill(_color, map(_life, _startLife, 0, 255, 0));
     noStroke();
-    rect(_x - (_width / 2), _y - (_height / 2), _width, _height);
+    rect(_x, _y, _width, _height);
   }
 }

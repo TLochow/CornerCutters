@@ -1,10 +1,15 @@
 class Level extends IGameModule { //<>//
-  ArrayList<ArrayList<Cell>> _field;
+  private ArrayList<ArrayList<Cell>> _field;
 
-  Car _player;
-  Car _enemy;
+  private Car _player;
+  private Car _enemy;
 
-  ArrayList<Fader> _fader;
+  private int _playerScore;
+  private int _enemyScore;
+
+  private ArrayList<Fader> _fader;
+
+  private Goal _goal;
 
   public Level() {
     CreateField();
@@ -22,9 +27,14 @@ class Level extends IGameModule { //<>//
     } while (!_field.get(startX).get(startY).GetOpenByDirection(startDirection));
 
     _player = new Car(startX, startY, startDirection, 2, color(0, 0, 255));
-    _enemy = new Car(startX, startY, startDirection, 1, color(255, 0, 0));
+    _enemy = new Car(startX, startY, startDirection, 10, color(255, 0, 0));
+
+    _playerScore = 0;
+    _enemyScore = 0;
 
     _fader = new ArrayList<Fader>();
+
+    _goal = new Goal(0, 0);
   }
 
   public void CreateField() {
@@ -113,6 +123,11 @@ class Level extends IGameModule { //<>//
   }
 
   public IGameModule Update() {
+    if (!_goal.Placed)
+      _goal.Place(_field);
+
+    _goal.Update();
+
     _player.Update(_field);
     float faderLife = random(100, 200);
     float faderDrawSize = map(faderLife, 100, 200, 2, 7);
@@ -123,6 +138,14 @@ class Level extends IGameModule { //<>//
     faderLife = random(100, 200);
     faderDrawSize = map(faderLife, 100, 200, 2, 7);
     _fader.add(new Fader(_enemy.DrawX + random(-2, 2), _enemy.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, _enemy.Color, floor(faderLife)));
+
+    if (_player.X == _goal.X && _player.Y == _goal.Y) {
+      _playerScore++;
+      _goal.Placed = false;
+    } else if (_enemy.X == _goal.X && _enemy.Y == _goal.Y) {
+      _enemyScore++;
+      _goal.Placed = false;
+    }
 
     for (int i = _fader.size() - 1; i >= 0; i--) {
       if (_fader.get(i).Update())
@@ -144,8 +167,21 @@ class Level extends IGameModule { //<>//
     for (int i = _fader.size() - 1; i >= 0; i--)
       _fader.get(i).Draw();
 
+    _goal.Draw();
+
     _enemy.Draw();
     _player.Draw();
+    
+    fill(255, 255, 205);
+    noStroke();
+    rect(0, -218 * SCALE, width, 15 * SCALE);
+    textSize(10 * SCALE);
+    textAlign(LEFT);
+    fill(0, 0, 100);
+    text(_playerScore, -395 * SCALE, -215 * SCALE);
+    textAlign(RIGHT);
+    fill(100, 0, 0);
+    text(_enemyScore, 395 * SCALE, -215 * SCALE);
   }
 
   public void MousePressed() {

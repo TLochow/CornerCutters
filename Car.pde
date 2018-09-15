@@ -123,6 +123,6 @@ class Car {
       carLength = carWidth;
       carWidth = tmp;
     }
-    rect(DrawX - carLength, DrawY - carWidth, carLength * 2, carWidth * 2);
+    rect(DrawX, DrawY, carLength * 2, carWidth * 2);
   }
 }

@@ -6,6 +6,8 @@ IGameModule _currentModule;
 void setup() {
   size(1600, 900);
   //fullScreen();
+  
+  rectMode(CENTER);
 
   float originWidth = 800.0;
   float originHeight = 450.0;
