@@ -4,6 +4,8 @@ class Level extends IGameModule { //<>//
   Car _player;
   Car _enemy;
 
+  ArrayList<Fader> _fader;
+
   public Level() {
     CreateField();
     FillField();
@@ -21,6 +23,8 @@ class Level extends IGameModule { //<>//
 
     _player = new Car(startX, startY, startDirection, 2, color(0, 0, 255));
     _enemy = new Car(startX, startY, startDirection, 1, color(255, 0, 0));
+
+    _fader = new ArrayList<Fader>();
   }
 
   public void CreateField() {
@@ -110,9 +114,20 @@ class Level extends IGameModule { //<>//
 
   public IGameModule Update() {
     _player.Update(_field);
+    float faderLife = random(100, 200);
+    float faderDrawSize = map(faderLife, 100, 200, 2, 7);
+    _fader.add(new Fader(_player.DrawX + random(-2, 2), _player.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, _player.Color, floor(faderLife)));
 
     if (_enemy.Update(_field))
       _enemy.SteeringDirection = floor(random(3));
+    faderLife = random(100, 200);
+    faderDrawSize = map(faderLife, 100, 200, 2, 7);
+    _fader.add(new Fader(_enemy.DrawX + random(-2, 2), _enemy.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, _enemy.Color, floor(faderLife)));
+
+    for (int i = _fader.size() - 1; i >= 0; i--) {
+      if (_fader.get(i).Update())
+        _fader.remove(i);
+    }
     return null;
   }
 
@@ -125,6 +140,9 @@ class Level extends IGameModule { //<>//
         column.get(y).Draw(x, y);
       }
     }
+
+    for (int i = _fader.size() - 1; i >= 0; i--)
+      _fader.get(i).Draw();
 
     _enemy.Draw();
     _player.Draw();

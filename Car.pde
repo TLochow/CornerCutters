@@ -9,6 +9,9 @@ class Car {
   public int SteeringDirection;
 
   public color Color;
+  
+  public float DrawX;
+  public float DrawY;
 
   public Car(int x, int y, int direction, int speed, color carColor) {
     _positionOffset = 0;
@@ -18,6 +21,9 @@ class Car {
     SteeringDirection = 0;
     Speed = speed;
     Color = carColor;
+    
+    DrawX = -width;
+    DrawY = -height;
   }
 
   public boolean Update(ArrayList<ArrayList<Cell>> field) {
@@ -86,24 +92,24 @@ class Car {
 
   public void Draw() {
     float size = 20 * SCALE;
-    float xPos = X * size;
-    float yPos = Y * size;
-    xPos -= width / 2;
-    yPos -= height / 2;
-    xPos += size / 2;
-    yPos += size;
+    DrawX = X * size;
+    DrawY = Y * size;
+    DrawX -= width / 2;
+    DrawY -= height / 2;
+    DrawX += size / 2;
+    DrawY += size;
 
     if (Direction % 2 == 0) {
       if (Direction > 1) {
-        xPos += _positionOffset * SCALE;
+        DrawX += _positionOffset * SCALE;
       } else {
-        xPos -= _positionOffset * SCALE;
+        DrawX -= _positionOffset * SCALE;
       }
     } else {
       if (Direction > 1) {
-        yPos += _positionOffset * SCALE;
+        DrawY += _positionOffset * SCALE;
       } else {
-        yPos -= _positionOffset * SCALE;
+        DrawY -= _positionOffset * SCALE;
       }
     }
 
@@ -117,6 +123,6 @@ class Car {
       carLength = carWidth;
       carWidth = tmp;
     }
-    rect(xPos - carLength, yPos - carWidth, carLength * 2, carWidth * 2);
+    rect(DrawX - carLength, DrawY - carWidth, carLength * 2, carWidth * 2);
   }
 }
