@@ -3,6 +3,7 @@ class Level extends IGameModule { //<>//
 
   private Car _player;
   private Car _enemy;
+  private EnemyAI _enemyAI;
 
   private int _playerScore;
   private int _enemyScore;
@@ -12,6 +13,11 @@ class Level extends IGameModule { //<>//
   private Goal _goal;
 
   public Level() {
+    Setup();
+  }
+
+  private void Setup() {
+
     CreateField();
     FillField();
 
@@ -28,6 +34,7 @@ class Level extends IGameModule { //<>//
 
     _player = new Car(startX, startY, startDirection, 2, color(0, 0, 255));
     _enemy = new Car(startX, startY, startDirection, 10, color(255, 0, 0));
+    _enemyAI = new EnemyAI(_field.size(), _field.get(0).size());
 
     _playerScore = 0;
     _enemyScore = 0;
@@ -134,7 +141,7 @@ class Level extends IGameModule { //<>//
     _fader.add(new Fader(_player.DrawX + random(-2, 2), _player.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, _player.Color, floor(faderLife)));
 
     if (_enemy.Update(_field))
-      _enemy.SteeringDirection = floor(random(3));
+      _enemy.SteeringDirection = _enemyAI.NextStep(_enemy, _field, _goal);
     faderLife = random(100, 200);
     faderDrawSize = map(faderLife, 100, 200, 2, 7);
     _fader.add(new Fader(_enemy.DrawX + random(-2, 2), _enemy.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, _enemy.Color, floor(faderLife)));
@@ -171,16 +178,16 @@ class Level extends IGameModule { //<>//
 
     _enemy.Draw();
     _player.Draw();
-    
+
     fill(255, 255, 205);
     noStroke();
     rect(0, -218 * SCALE, width, 15 * SCALE);
     textSize(10 * SCALE);
     textAlign(LEFT);
-    fill(0, 0, 100);
+    fill(0, 0, 255);
     text(_playerScore, -395 * SCALE, -215 * SCALE);
     textAlign(RIGHT);
-    fill(100, 0, 0);
+    fill(255, 0, 0);
     text(_enemyScore, 395 * SCALE, -215 * SCALE);
   }
 
@@ -198,6 +205,8 @@ class Level extends IGameModule { //<>//
       SetPlayerSteering(1);
     if (key == 'd' || keyCode == RIGHT)
       SetPlayerSteering(2);
+    if (key == 'r')
+      Setup();
   }
 
   public void SetPlayerSteering(int steering) {
