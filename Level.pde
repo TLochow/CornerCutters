@@ -39,8 +39,8 @@ class Level extends IGameModule {
   }
 
   public void FillField() {
-    for (int i = 0; i < 1; i++) {
-      int x = floor(random(40));
+    for (int i = 0; i < 40; i++) {
+      int x = floor(random(40)); //<>//
       int y = floor(random(22));
       if (_field.get(x).get(y).Visited) {
         i--;
@@ -84,7 +84,7 @@ class Level extends IGameModule {
                   _field.get(curX).get(curY).OpenDown = true;
                 }
               }
-            } while (_field.get(curX).get(curY).Visited);
+            } while (!_field.get(curX).get(curY).Visited);
           }
         }
       }
