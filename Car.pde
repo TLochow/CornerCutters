@@ -8,12 +8,17 @@ class Car {
 
   public int SteeringDirection;
 
+  public int Score;
+
   public color Color;
-  
+
   public float DrawX;
   public float DrawY;
 
-  public Car(int x, int y, int direction, int speed, color carColor) {
+  private boolean _aiControlled;
+  private EnemyAI _ai;
+
+  public Car(int x, int y, int direction, int speed, color carColor, boolean aiControlled) {
     _positionOffset = 0;
     X = x;
     Y = y;
@@ -21,12 +26,18 @@ class Car {
     SteeringDirection = 0;
     Speed = speed;
     Color = carColor;
-    
+
+    Score = 0;
+
     DrawX = -width;
     DrawY = -height;
+
+    _aiControlled = aiControlled;
+    if (aiControlled)
+      _ai = new EnemyAI();
   }
 
-  public boolean Update(ArrayList<ArrayList<Cell>> field) {
+  public boolean Update(ArrayList<ArrayList<Cell>> field, Goal goal, ArrayList<ArrayList<Integer[]>> moveHistory) {
     boolean atCorner = false;
     _positionOffset += Speed;
 
@@ -50,11 +61,6 @@ class Car {
 
       Cell corner = field.get(X).get(Y);
 
-      if ((Direction == 0 && !corner.OpenLeft) || (Direction == 1 && !corner.OpenUp) || (Direction == 2 && !corner.OpenRight) || (Direction == 3 && !corner.OpenDown)) {
-        int du = 3;
-        du = du + du - du;
-      }
-
       if (SteeringDirection != 0)
         ApplySteering(corner);
 
@@ -69,6 +75,9 @@ class Car {
           ApplySteering(corner);
         }
       }
+
+      if (_aiControlled)
+        SteeringDirection = _ai.NextStep(this, field, goal, moveHistory);
     }
 
     return atCorner;
@@ -90,7 +99,7 @@ class Car {
       Direction = beforeDir;
   }
 
-  public void Draw() {
+  public void Draw(int drawOrderPosition, int totalCarAmount) {
     float size = 20 * SCALE;
     DrawX = X * size;
     DrawY = Y * size;
@@ -124,5 +133,7 @@ class Car {
       carWidth = tmp;
     }
     rect(DrawX, DrawY, carLength * 2, carWidth * 2);
+
+    text(Score, map(drawOrderPosition, 0, totalCarAmount, -width / 2, width / 2), -215 * SCALE);
   }
 }
