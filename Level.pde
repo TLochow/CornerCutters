@@ -34,7 +34,7 @@ class Level extends IGameModule { //<>//
       startDirection = floor(random(4));
     } while (!_field.get(startX).get(startY).GetOpenByDirection(startDirection));
 
-    _player = new Car(startX, startY, startDirection, 2, color(0, 0, 255), false);
+    _player = new Car(startX, startY, startDirection, 20, color(0, 0, 255), false);
 
     _enemies = new ArrayList<Car>();
     for (int i = 0; i < 2; i++) {
@@ -45,7 +45,7 @@ class Level extends IGameModule { //<>//
       do {
         startDirection = floor(random(4));
       } while (!_field.get(startX).get(startY).GetOpenByDirection(startDirection));
-      _enemies.add(new Car(startX, startY, startDirection, 10, GetColorForNumber(i), true));
+      _enemies.add(new Car(startX, startY, startDirection, 20, GetColorForNumber(i), true));
     }
 
     _enemyMoveHistory = new ArrayList<ArrayList<Integer[]>>();
@@ -121,7 +121,7 @@ class Level extends IGameModule { //<>//
   }
 
   public void FillField() {
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 75; i++) {
       int x = floor(random(_field.size()));
       int y = floor(random(_field.get(x).size()));
       if (_field.get(x).get(y).Visited) {
@@ -181,8 +181,8 @@ class Level extends IGameModule { //<>//
 
     _player.Update(_field, _goal, null);
     float faderLife = random(100, 200);
-    float faderDrawSize = map(faderLife, 100, 200, 2, 7);
-    _fader.add(new Fader(_player.DrawX + random(-2, 2), _player.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, _player.Color, floor(faderLife)));
+    float faderDrawSize = map(faderLife, 100, 200, 2, 7) * SCALE;
+    _fader.add(new Fader(_player.DrawX + (random(-2, 2) * SCALE), _player.DrawY + (random(-2, 2) * SCALE), faderDrawSize, faderDrawSize, _player.Color, floor(faderLife)));
 
     if (_player.X == _goal.X && _player.Y == _goal.Y) {
       _player.Score++;
@@ -193,8 +193,8 @@ class Level extends IGameModule { //<>//
       cur.Update(_field, _goal, _enemyMoveHistory);
 
       faderLife = random(100, 200);
-      faderDrawSize = map(faderLife, 100, 200, 2, 7);
-      _fader.add(new Fader(cur.DrawX + random(-2, 2), cur.DrawY + random(-2, 2), faderDrawSize, faderDrawSize, cur.Color, floor(faderLife)));
+      faderDrawSize = map(faderLife, 100, 200, 2, 7) * SCALE;
+      _fader.add(new Fader(cur.DrawX + (random(-2, 2) * SCALE), cur.DrawY + (random(-2, 2) * SCALE), faderDrawSize, faderDrawSize, cur.Color, floor(faderLife)));
       if (cur.X == _goal.X && cur.Y == _goal.Y) {
         cur.Score++;
         _goal.Placed = false;
@@ -223,6 +223,7 @@ class Level extends IGameModule { //<>//
   }
 
   public void Draw() {
+    background(0);
     stroke(255);
     strokeWeight(5 * SCALE);
     for (int x = 0; x < _field.size(); x++) {

@@ -4,7 +4,7 @@ float MOUSEY;
 IGameModule _currentModule;
 
 void setup() {
-  //size(1600, 900);
+  //size(800, 450);
   fullScreen();
   
   rectMode(CENTER);
@@ -20,7 +20,6 @@ void setup() {
 }
 
 void draw() {
-  background(0);
   translate(width / 2, height / 2);
 
   IGameModule nextModule = _currentModule.Update();
