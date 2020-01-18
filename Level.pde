@@ -34,10 +34,10 @@ class Level extends IGameModule { //<>//
       startDirection = floor(random(4));
     } while (!_field.get(startX).get(startY).GetOpenByDirection(startDirection));
 
-    _player = new Car(startX, startY, startDirection, 20, color(0, 0, 255), false);
+    _player = new Car(startX, startY, startDirection, 5, color(0, 0, 255), false);
 
     _enemies = new ArrayList<Car>();
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
       do {
         startX = floor(random(fieldWidth));
         startY = floor(random(fieldHeight));
@@ -45,7 +45,7 @@ class Level extends IGameModule { //<>//
       do {
         startDirection = floor(random(4));
       } while (!_field.get(startX).get(startY).GetOpenByDirection(startDirection));
-      _enemies.add(new Car(startX, startY, startDirection, 20, GetColorForNumber(i), true));
+      _enemies.add(new Car(startX, startY, startDirection, 10, GetColorForNumber(i), true));
     }
 
     _enemyMoveHistory = new ArrayList<ArrayList<Integer[]>>();
